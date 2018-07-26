@@ -1,0 +1,21 @@
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
+
+dependencies {
+	compileInclude group: "com.github.javafaker", name: "javafaker", version: "0.15"
+	compileInclude group: "com.github.mifmif", name: "generex", version: "1.0.2"
+	compileInclude group: "dk.brics.automaton", name: "automaton", version: "1.11-8"
+	compileInclude group: "org.apache.commons", name: "commons-lang3", version: "3.5"
+	compileInclude group: "org.yaml", name: "snakeyaml", version: "1.20"
+
+	compileOnly group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "3.1.0"
+	compileOnly group: "com.liferay", name: "com.liferay.apio.architect.api", version: "1.3.0"
+	compileOnly group: "com.liferay", name: "com.liferay.portal.instance.lifecycle.api", version: "1.0.0"
+	compileOnly group: "com.liferay", name: "com.liferay.roles.admin.demo.data.creator.api", version: "2.0.0"
+	compileOnly group: "com.liferay", name: "com.liferay.users.admin.demo.data.creator.api", version: "2.0.0"
+	compileOnly group: "com.liferay.portal", name: "com.liferay.portal.kernel", version: "3.0.0"
+	compileOnly group: "org.osgi", name: "org.osgi.core", version: "6.0.0"
+	compileOnly project(":liferay-recipes-api")
+	compileOnly project(":liferay-recipes-demo-data-creator-api")
+	compileOnly project(":organizations-demo-data-creator-api")
+}

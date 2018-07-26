@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<suppressions>
+	<checkstyle>
+		<suppress checks="ChainingCheck" files="liferay-recipes-demo-data-creator-impl/src/main/java/com/liferay/recipes/demo/data/creator/internal/RecipeDemoDataCreatorImpl\.java" />
+		<suppress checks="ChainingCheck" files="liferay-recipes-demo-data-creator-impl/src/main/java/com/liferay/recipes/demo/data/creator/internal/RecipeInformation\.java" />
+		<suppress checks="ChainingCheck" files="liferay-recipes-demo/src/main/java/com/liferay/recipes/demo/internal/RecipesDemo\.java" />
+		<suppress checks="ChainingCheck" files="liferay-recipes-gogo-shell/src/main/java/com/liferay/recipes/gogo/shell/internal/RestaurantsCommand\.java" />
+		<suppress checks="JSONNamingCheck" files="liferay-recipes-demo-data-creator-impl/src/main/java/com/liferay/recipes/demo/data/creator/internal/MealDBJSONRecipeProvider\.java" />
+		<suppress checks="TernaryOperatorCheck" files="liferay-recipes-demo/src/main/java/com/liferay/recipes/demo/internal/RecipesDemo\.java" />
+	</checkstyle>
+	<source-check>
+		<suppress checks="JavaStaticImportsCheck" files=".*" />
+	</source-check>
+</suppressions>

@@ -1,0 +1,5 @@
+Bundle-Name: Liferay Organizations Demo Data Creator Impl
+Bundle-SymbolicName: com.liferay.organizations.demo.data.creator.impl
+Bundle-Version: 1.0.0
+-conditionalpackage: com.liferay.roles.admin.demo.data.creator.internal
+-dsannotations-options: inherit

@@ -1,0 +1,33 @@
+# Launch with Docker
+
+This application comes with a built-in gradle task for preparing and running a Docker image with all the necessary things pre-installed. Once you have the repository cloned in your machine, you just need to run `./gradlew runDocker` and wait till the instance is ready.
+
+**Important**: Remember to update to the latest docker version available for your OS.
+
+## Which are the available commands?
+
+### `./gradlew runDocker`
+
+This command launches the Liferay Portal instance along with a MySQL db instance.
+
+### `./gradlew stopDocker`
+
+This command stops and removes the Liferay Portal instance along with a MySQL db instance.
+
+### `./gradlew dockerClean`
+
+Removes the application jars from the Liferay Portal instance.
+
+### `./gradlew dockerDeploy`
+
+Deploys the application jars into the Liferay Portal instance. This command should be preceded with a call to `./gradlew dockerclean` to ensure that the module jar has been cleaned from the docker instance.
+
+## Useful aliases
+
+```bash
+# Opens the Liferay Portal GoGo Shell
+alias dgogo='docker exec -ti liferay telnet localhost 11311'
+
+# Opens the Liferay Portal logs
+alias dlog='docker exec -i liferay tail -f /liferay/logs/liferay.2018-07-30.log'
+```

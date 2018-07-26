@@ -1,0 +1,115 @@
+buildscript {
+	dependencies {
+		classpath group: "org.kt3k.gradle.plugin", name: "coveralls-gradle-plugin", version: "2.6.3"
+	}
+
+	repositories {
+		maven {
+			url "https://repository-cdn.liferay.com/nexus/content/groups/public"
+		}
+	}
+}
+
+allprojects {
+	repositories {
+		mavenLocal()
+
+		maven {
+			url "https://repository-cdn.liferay.com/nexus/content/groups/public"
+		}
+	}
+
+	configurations.all {
+		resolutionStrategy {
+			force 'xml-apis:xml-apis:1.4.01'
+		}
+	}
+
+	task dockerClean(type: Exec) {
+		commandLine "echo", "Cleaning artefact"
+	}
+
+	task generateDeployableArtefact(type: Exec) {
+		commandLine "echo", "Generating artefact"
+	}
+
+	task dockerDeploy(type: Exec) {
+		commandLine 'docker', 'exec', 'liferay', 'chown', 'liferay:liferay', '-R', '/liferay/deploy'
+	}
+
+}
+
+configure(subprojects.findAll {!it.childProjects}) {
+	apply plugin: 'java'
+
+	liferay {
+		deployDir = getClientDeployDir()
+	}
+
+	dockerClean {
+		doFirst {
+			def props = new Properties()
+
+			file("bnd.bnd").withInputStream { props.load(it) }
+
+			def bundleName = props.getProperty("Bundle-SymbolicName")
+
+			commandLine 'docker', 'exec', 'liferay', 'rm', '-f', "/liferay/osgi/modules/${bundleName}.jar"
+		}
+	}
+
+	generateDeployableArtefact {
+		dependsOn deploy
+	}
+
+	dockerDeploy {
+		dependsOn generateDeployableArtefact
+
+		doFirst {
+			def props = new Properties()
+
+			file("bnd.bnd").withInputStream { props.load(it) }
+
+			def bundleName = props.getProperty("Bundle-SymbolicName")
+
+			def file = "${getClientDeployDir()}/${bundleName}.jar"
+
+			commandLine 'docker', 'cp', file, "liferay:/liferay/osgi/modules"
+		}
+	}
+}
+
+task stopDocker(type: Exec) {
+	ignoreExitValue true
+
+	commandLine 'docker-compose',
+	'-f', './liferay-recipes-docker/docker-compose.yml',
+	'down', '-t', '0'
+}
+
+task runDocker(type: Exec) {
+	dependsOn stopDocker
+
+	commandLine 'docker-compose',
+	'-f', './liferay-recipes-docker/docker-compose.yml',
+	'up', '--detach', '-V', '--force-recreate', '--build'
+}
+
+def getClientDeployDir() {
+	if (project.hasProperty('liferay.home')) {
+		return new File(project.getProperty('liferay.home').toString() + '/osgi/modules')
+	}
+
+	Properties properties = new Properties()
+	def file = project.rootProject.file('local.properties')
+
+	if (file.exists()) {
+		properties.load(file.newDataInputStream())
+	}
+
+	def liferayDeployProperty = 'liferay.recipes.deploy.dir'
+
+	def sdkDir = properties.getProperty(liferayDeployProperty)
+
+	return new File(rootDir, (sdkDir ?: project.property(liferayDeployProperty)).toString())
+}

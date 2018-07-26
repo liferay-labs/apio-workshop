@@ -1,0 +1,9 @@
+.gradle/
+classes/
+build/
+target/
+.idea/
+out
+*.iml
+liferay-recipes-uad/
+liferay-recipes-uad-test

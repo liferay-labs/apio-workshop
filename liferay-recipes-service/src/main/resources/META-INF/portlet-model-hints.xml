@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+
+<model-hints>
+	<model name="com.liferay.recipes.model.Recipe">
+		<field name="uuid" type="String" />
+		<field name="recipeId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="userId" type="long" />
+		<field name="userName" type="String" />
+		<field name="createDate" type="Date" />
+		<field name="modifiedDate" type="Date" />
+		<field name="name" type="String">
+			<hint name="max-length">255</hint>
+		</field>
+		<field name="region" type="String">
+			<hint name="max-length">255</hint>
+		</field>
+		<field name="imageFileEntryId" type="long" />
+		<field name="publishedDate" type="Date" />
+		<field name="hoursToMake" type="int" />
+		<field name="minutesToMake" type="int" />
+		<field name="stepsString" type="String">
+			<hint-collection name="CLOB" />
+		</field>
+		<field name="ingredientsString" type="String">
+			<hint-collection name="CLOB" />
+		</field>
+		<field name="videoURL" type="String" />
+	</model>
+</model-hints>
