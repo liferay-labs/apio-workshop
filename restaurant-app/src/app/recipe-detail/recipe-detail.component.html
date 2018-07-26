@@ -1,0 +1,27 @@
+<div *ngIf="recipe">
+<h1>
+	{{recipe?.name}}
+</h1>
+<span *ngFor="let keyword of recipe.keywords" class="label">{{keyword}}</span>
+<h3>
+	{{recipe?.cookTime}}
+</h3>
+<img src="{{recipe.logo}}">
+<h4>Ingredients</h4>
+<div class="row flex-items-xs-center">
+	<ul class="list col-xs-6">
+	  <li *ngFor="let ingredient of recipe.ingredients">
+		{{ingredient}}
+	  </li>
+	</ul>
+</div>
+<h4>Instructions</h4>
+<div class="row flex-items-xs-center">
+	<ol class="list col-xs-6">
+	  <li *ngFor="let instruction of recipe.instructions">
+		{{instruction}}
+	  </li>
+	</ol>
+</div>
+<iframe width="560" height="315" [src]="videoUrl" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+</div>

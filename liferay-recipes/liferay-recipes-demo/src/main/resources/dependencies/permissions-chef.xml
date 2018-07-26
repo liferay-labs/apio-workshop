@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<permissions>
+	<resource>
+		<resource-name>com.liferay.recipes</resource-name>
+		<action-id>ADD_RECIPE</action-id>
+	</resource>
+	<resource>
+		<resource-name>com.liferay.recipes.model.Recipe</resource-name>
+		<action-id>DELETE</action-id>
+		<action-id>UPDATE</action-id>
+		<action-id>VIEW</action-id>
+	</resource>
+</permissions>

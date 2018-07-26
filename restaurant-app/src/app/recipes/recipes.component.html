@@ -1,0 +1,27 @@
+<h1>
+Recipes
+</h1>
+<span *ngIf="loading" class="spinner spinner-lg">
+Loading...
+</span>
+<div *ngIf="!loading">
+<clr-datagrid>
+	<clr-dg-column>Name</clr-dg-column>
+	<clr-dg-column *ngIf="recipes[0] && recipes[0].category">Category</clr-dg-column>
+	<clr-dg-column *ngIf="recipes[0] && recipes[0].origin">Origin</clr-dg-column>
+	<clr-dg-column *ngIf="recipes[0] && recipes[0].cookTime">Cook time</clr-dg-column>
+	<clr-dg-column *ngIf="recipes[0] && recipes[0].logo">Image</clr-dg-column>
+
+	<clr-dg-row *ngFor="let recipe of recipes" (click)="onClick(recipe)">
+	  <clr-dg-cell>{{recipe.name}}</clr-dg-cell>
+	  <clr-dg-cell *ngIf="recipe.category">{{recipe.category}}</clr-dg-cell>
+	  <clr-dg-cell *ngIf="recipe.origin">{{recipe.origin}}</clr-dg-cell>
+	  <clr-dg-cell *ngIf="recipe.cookTime">{{recipe.cookTime}}</clr-dg-cell>
+	  <clr-dg-cell *ngIf="recipe.logo">
+		<img src="{{recipe.logo}}">
+	  </clr-dg-cell>
+	</clr-dg-row>
+
+	<clr-dg-footer>{{recipes.length}} recipes</clr-dg-footer>
+</clr-datagrid>
+</div>

@@ -1,0 +1,11 @@
+img {
+height: 400px;
+margin-top: 50px;
+object-fit: cover;
+width: 100%;
+}
+
+ol {
+list-style-position: inside;
+text-align: center;
+}

@@ -1,0 +1,161 @@
+# Launch as Tomcat
+
+If you don't want to use docker, you can always download the Liferay Portal 7.1 GA1 zip bundle from [here](https://sourceforge.net/projects/lportal/files/Liferay%20Portal/7.1.0%20GA1/liferay-ce-portal-tomcat-7.1.0-ga1-20180703012531655.zip/download?use_mirror=datapacket&r=https%3A%2F%2Fwww.liferay.com%2Fdownloads-community&use_mirror=datapacket). Then follow this steps:
+
+## Update `portal-ext.properties`
+
+This are the `portal-ext.properties` that should be placed in your Liferay Portal folder:
+
+```properties
+admin.email.from.address=test@liferay.com
+admin.email.from.name=Test Test
+company.default.web.id=liferay.com
+default.admin.email.address.prefix=test
+module.framework.properties.osgi.console=localhost:11311
+setup.wizard.enabled=false
+```
+
+## Update Apio Architect
+
+### Remove old Apio Architect version
+
+The first thing we need to do is remove the default version of APIO from Liferay Portal. In order to do that we can open a console and remove both the APIO Architect API and Impl from the list of pre-installed packages.
+
+Navigate to the directory where all the packages are pre-installed:
+
+```bash
+$ cd $LIFERAY_HOME/osgi/marketplace
+```
+
+Once there, list and remove the APIO Architect API and Impl packages:
+
+```bash
+$ ls *Apio*
+
+Liferay CE Foundation - Liferay CE Apio Architect - API.lpkg
+Liferay CE Foundation - Liferay CE Apio Architect - Impl.lpkg
+
+$ rm *Apio*
+```
+
+If the Liferay Portal instance is running, on the console, you should see that the packages have been stopped:
+
+```log
+2018-07-16 12:42:22.186 INFO  [fileinstall-$LIFERAY_HOME/osgi/marketplace][BundleStartStopLogger:38] STOPPED Liferay CE Foundation - Liferay CE Apio Architect - API_1.0.0 [387]
+2018-07-16 12:42:22.199 INFO  [fileinstall-$LIFERAY_HOME/osgi/marketplace][BundleStartStopLogger:38] STOPPED com.liferay.apio.architect.api_1.0.2 [388]
+2018-07-16 12:42:22.216 INFO  [Refresh Thread: Equinox Container: c0a2f090-f388-0018-1c45-fc3bc84c1049][BundleStartStopLogger:38] STOPPED com.liferay.apio.architect.uri.mapper.impl_1.0.0 [715]
+2018-07-16 12:42:22.323 INFO  [Refresh Thread: Equinox Container: c0a2f090-f388-0018-1c45-fc3bc84c1049][BundleStartStopLogger:38] STOPPED com.liferay.apio.architect.impl_1.0.1 [714]
+2018-07-16 12:42:22.335 INFO  [Refresh Thread: Equinox Container: c0a2f090-f388-0018-1c45-fc3bc84c1049][BundleStartStopLogger:38] STOPPED com.liferay.apio.architect.exception.mapper.impl_1.0.1 [713]
+2018-07-16 12:42:22.347 INFO  [fileinstall-$LIFERAY_HOME/osgi/marketplace][BundleStartStopLogger:38] STOPPED Liferay CE Foundation - Liferay CE Apio Architect - Impl_1.0.0 [712]
+```
+
+Once that the module is stopped, the last thing to do is remove the configuration file for that APIO version:
+
+```bash
+$ rm $LIFERAY_HOME/osgi/configs/*apio*
+```
+
+### Install the new bundles
+
+Before installing the new version of APIO Architect, we should download the jar files that contains the updated version of OSGI modules that support APIO. You should create a temporary folder to download the packages:
+
+```bash
+$ mkdir -p $LIFERAY_HOME/../packages/apio
+$ cd $LIFERAY_HOME/../packages/apio
+```
+
+To download the updated version of APIO Architect simply execute the following command (be sure that all is written in the same line):
+
+```bash
+$ wget http://central.maven.org/maven2/com/liferay/com.liferay.apio.architect.impl/1.0.6/com.liferay.apio.architect.impl-1.0.6.jar  http://central.maven.org/maven2/com/liferay/com.liferay.apio.architect.api/1.3.0/com.liferay.apio.architect.api-1.3.0.jar http://central.maven.org/maven2/com/liferay/com.liferay.apio.architect.uri.mapper.impl/1.0.1/com.liferay.apio.architect.uri.mapper.impl-1.0.1.jar http://central.maven.org/maven2/com/liferay/com.liferay.apio.architect.exception.mapper.impl/1.0.3/com.liferay.apio.architect.exception.mapper.impl-1.0.3.jar
+```
+
+Once all the artifacts are downloaded, simply deploy them by moving to the deploy folder inside @product@ installation:
+
+```bash
+$ mv *apio.architect*.jar $LIFERAY_HOME/deploy
+```
+
+The Liferay Portal logs should show that the modules are starting:
+
+```log
+2018-07-16 13:01:26.477 INFO  [com.liferay.portal.kernel.deploy.auto.AutoDeployScanner][AutoDeployDir:261] Processing com.liferay.apio.architect.api-1.3.0.jar
+2018-07-16 13:01:26.483 INFO  [com.liferay.portal.kernel.deploy.auto.AutoDeployScanner][AutoDeployDir:261] Processing com.liferay.apio.architect.impl-1.0.6.jar
+2018-07-16 13:01:26.484 INFO  [com.liferay.portal.kernel.deploy.auto.AutoDeployScanner][AutoDeployDir:261] Processing com.liferay.apio.architect.exception.mapper.impl-1.0.3.jar
+2018-07-16 13:01:26.484 INFO  [com.liferay.portal.kernel.deploy.auto.AutoDeployScanner][AutoDeployDir:261] Processing com.liferay.apio.architect.uri.mapper.impl-1.0.1.jar
+2018-07-16 13:01:31.818 INFO  [fileinstall-$LIFERAY_HOME/osgi/modules][BundleStartStopLogger:35] STARTED com.liferay.apio.architect.exception.mapper.impl_1.0.3 [948]
+2018-07-16 13:01:31.898 INFO  [fileinstall-$LIFERAY_HOME/osgi/modules][BundleStartStopLogger:35] STARTED com.liferay.apio.architect.impl_1.0.6 [949]
+2018-07-16 13:01:32.831 INFO  [fileinstall-$LIFERAY_HOME/osgi/modules][BundleStartStopLogger:35] STARTED com.liferay.apio.architect.api_1.3.0 [947]
+2018-07-16 13:01:32.839 INFO  [fileinstall-$LIFERAY_HOME/osgi/modules][BundleStartStopLogger:35] STARTED com.liferay.apio.architect.uri.mapper.impl_1.0.1 [950]
+```
+
+And the modules should appear on the OSGi modules folder:
+
+```bash
+$ ls $LIFERAY_HOME/osgi/modules
+
+com.liferay.apio.architect.api-1.3.0.jar
+com.liferay.apio.architect.impl-1.0.6.jar
+com.liferay.apio.architect.exception.mapper.impl-1.0.3.jar com.liferay.apio.architect.uri.mapper.impl-1.0.1.jar
+```
+
+### Enable the access to the APIs
+
+By default, the access to the APIs is restricted by security. In order to enable the access, a specific configuration should be added for the modules. That configuration is already available on the default config file from the github repository. You can simply download and move it to the OSGi config folder:
+
+```bash
+$ mkdir -p $LIFERAY_HOME/../packages/apio/config
+$ cd $LIFERAY_HOME/../packages/apio/config
+$ wget https://raw.githubusercontent.com/liferay/com-liferay-apio-architect/e25b53280939dd1f5bc4eab889c9ad7d512314cb/apio-architect-impl/configs/com.liferay.apio.architect.impl.application.ApioApplication-default.config
+$ mv com.liferay.apio.architect.impl.application.ApioApplication-default.config $LIFERAY_HOME/osgi/configs
+```
+
+After a while, once the config is reloaded by the OSGi container, you can make a request to the API root URL:
+
+```bash
+$ curl http://localhost:8080/o/api
+```
+
+And you will see the empty root response for the root API endpoint:
+
+```json
+{
+   "@id":"http://localhost:8080/o/api",
+   "@type":"EntryPoint",
+   "@context":[
+      {
+         "@vocab":"http://schema.org/"
+      },
+      "https://www.w3.org/ns/hydra/core#"
+   ]
+}
+```
+
+That means that the APIO module is running and ready to provide access to all the API endpoints.
+
+## Install Demo Data Creators
+
+After updating Apio Architect we need to add the Demo Data Creator jars (needed for creating the demo data):
+
+```bash
+$ wget http://central.maven.org/maven2/com/liferay/com.liferay.document.library.demo.data.creator.impl/2.0.0/com.liferay.document.library.demo.data.creator.impl-2.0.0.jar \
+      http://central.maven.org/maven2/com/liferay/com.liferay.document.library.demo.data.creator.api/2.0.0/com.liferay.document.library.demo.data.creator.api-2.0.0.jar \
+      http://central.maven.org/maven2/com/liferay/com.liferay.roles.admin.demo.data.creator.api/2.0.0/com.liferay.roles.admin.demo.data.creator.api-2.0.0.jar \
+      http://central.maven.org/maven2/com/liferay/com.liferay.roles.admin.demo.data.creator.impl/2.0.1/com.liferay.roles.admin.demo.data.creator.impl-2.0.1.jar \
+      http://central.maven.org/maven2/com/liferay/com.liferay.users.admin.demo.data.creator.api/2.0.0/com.liferay.users.admin.demo.data.creator.api-2.0.0.jar \
+      http://central.maven.org/maven2/com/liferay/com.liferay.users.admin.demo.data.creator.impl/2.0.0/com.liferay.users.admin.demo.data.creator.impl-2.0.0.jar
+$ mv *demo.data*.jar $LIFERAY_DEPLOY_DIR
+```
+
+## Run your Tomcat Liferay Portal instance
+
+You just need to execute the following command: `$LIFERAY_HOME/tomcat-9.0.6/bin/catalina.sh jpda start`.
+
+### Useful aliases
+
+```bash
+export runLiferay='$LIFERAY_HOME/bin/catalina.sh jpda start'
+export liferayLogs='tail -f $LIFERAY_HOME/logs/catalina.out'
+export stopLiferay='$LIFERAY_HOME/bin/catalina.sh stop'
+export gogo='telnet localhost 11311'
+```

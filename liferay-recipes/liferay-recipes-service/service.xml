@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.1.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_7_1_0.dtd">
+
+<service-builder package-path="com.liferay.recipes">
+	<author>Alejandro Hernández</author>
+	<namespace>APIO</namespace>
+	<entity json-enabled="false" local-service="true" name="Recipe" remote-service="true" uuid="true">
+
+		<!-- PK fields -->
+
+		<column name="recipeId" primary="true" type="long" />
+
+		<!-- Audit fields -->
+
+		<column name="companyId" type="long" />
+		<column name="groupId" type="long" />
+		<column name="userId" type="long" />
+		<column name="userName" type="String" />
+		<column name="createDate" type="Date" />
+		<column name="modifiedDate" type="Date" />
+
+		<!-- Other fields -->
+
+		<column name="name" type="String" />
+		<column name="region" type="String" />
+		<column name="imageFileEntryId" type="long" />
+		<column name="publishedDate" type="Date" />
+		<column name="hoursToMake" type="int" />
+		<column name="minutesToMake" type="int" />
+		<column name="stepsString" type="String" />
+		<column name="ingredientsString" type="String" />
+		<column name="videoURL" type="String" />
+
+		<!-- Order -->
+
+		<order by="desc">
+			<order-column name="createDate" />
+		</order>
+
+		<!-- Finder methods -->
+
+		<finder name="CompanyId" return-type="Collection">
+			<finder-column name="companyId" />
+		</finder>
+
+		<finder name="GroupId" return-type="Collection">
+			<finder-column name="groupId" />
+		</finder>
+
+		<!-- References -->
+
+		<reference entity="User" package-path="com.liferay.portal" />
+		<reference entity="AssetEntry" package-path="com.liferay.portlet.asset" />
+		<reference entity="AssetTag" package-path="com.liferay.portlet.asset" />
+		<reference entity="DLApp" package-path="com.liferay.portlet.documentlibrary" />
+	</entity>
+	<exceptions>
+		<exception>RecipeInvalidTimeToMake</exception>
+		<exception>RecipeNameTooLong</exception>
+		<exception>RecipeNullPublishedDate</exception>
+		<exception>RecipeRegionTooLong</exception>
+		<exception>RecipeVideoURLInvalid</exception>
+	</exceptions>
+</service-builder>

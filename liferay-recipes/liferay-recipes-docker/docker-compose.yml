@@ -1,0 +1,20 @@
+services:
+    mysql:
+        container_name: mysql
+        environment:
+            - MYSQL_ROOT_PASSWORD=my-secret-pw
+            - MYSQL_DATABASE=lportal
+            - character-set-server=utf8
+            - collation-server=utf8_general_ci
+        image: mdelapenya/mysql-utf8
+    portal:
+        build: .
+        container_name: liferay
+        depends_on:
+            - mysql
+        ports:
+            - "5005:5005"
+            - "8080:8080"
+            - "8099:8099"
+            - "11311:11311"
+version: '3'

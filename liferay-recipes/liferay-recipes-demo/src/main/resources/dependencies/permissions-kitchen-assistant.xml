@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+
+<permissions>
+	<resource>
+		<resource-name>com.liferay.recipes.model.Recipe</resource-name>
+		<action-id>VIEW</action-id>
+	</resource>
+</permissions>
