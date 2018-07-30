@@ -1,6 +1,8 @@
 # Steps for the workshop
 
-Add missing gradle dependencies to `liferay-recipes-rest` module:
+---
+
+1 - Add missing gradle dependencies to `liferay-recipes-rest` module:
 
 ```gradle
 compileOnly group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "3.1.0"
@@ -10,14 +12,18 @@ compileOnly group: "org.osgi", name: "org.osgi.core", version: "6.0.0"
 compileOnly project(":liferay-recipes-api")
 ```
 
-Rename resource to `RestaurantCollectionResource` and implement `CollectionResource`:
+---
+
+2 - Rename resource to `RestaurantCollectionResource` and implement `CollectionResource`:
 
 ```java
 public class RestaurantCollectionResource implements CollectionResource<> {
 }
 ```
 
-Fill up the `CollectionResource`'s type params:
+---
+
+3 - Fill up the `CollectionResource`'s type params:
 
 ```java
 public class RestaurantCollectionResource implements 
@@ -25,68 +31,55 @@ public class RestaurantCollectionResource implements
 }
 ```
 
-We need an `OrganizationIdentifier`:
+---
+
+4 - We need an `OrganizationIdentifier`:
 
 ```java
 public interface OrganizationIdentifier extends Identifier<Long> {
 }
 ```
 
-Use `OrganizationIdentifier` and implement interface:
+---
+
+5 - Use `OrganizationIdentifier` and implement interface:
 
 ```java
 public class RestaurantCollectionResource implements
 	CollectionResource<Organization, Long, OrganizationIdentifier> {
 	
-	@Override
-	public String getName() {
-		return null;
-	}
-
-	@Override
-	public Representor<Organization> representor(
-		Representor.Builder<Organization, Long> builder) {
-		
-		return null;
-	}
-
-	@Override
-	public CollectionRoutes<Organization, Long> collectionRoutes(
-		CollectionRoutes.Builder<Organization, Long> builder) {
-		
-		return null;
-	}
-
-	@Override
-	public ItemRoutes<Organization, Long> itemRoutes(
-		ItemRoutes.Builder<Organization, Long> builder) {
-		
-		return null;
-	}
 }
 ```
 
-Return a name in `getName`:
+---
+
+6 - Return a name in `getName`:
 
 ```java
 return "organization";
 ```
 
-Expose the class as a an OSGi `Component`:
+---
+
+7 - Expose the class as a an OSGi `Component`:
 
 ```java
 @Component
 public class RestaurantCollectionResource
 ```
 
-Inject `OrganizationService`:
+---
+
+8 - Inject `OrganizationService`:
 
 ```java
 @Reference
 private OrganizationService _organizationService;
 ```
 
-Add method to retrieve an `Organization` to `itemRoutes`:
+---
+
+9 - Add method to retrieve an `Organization` to `itemRoutes`:
 
 ```java
 return builder.addGetter(
@@ -94,7 +87,9 @@ return builder.addGetter(
 ).build();
 ```
 
-Add minimum information to the `representor` method:
+---
+
+10 - Add minimum information to the `representor` method:
 
 ```java
 return builder.types(
@@ -104,7 +99,9 @@ return builder.types(
 ).build();
 ```
 
-Add method to retrieve a page of `Organization`:
+---
+
+11 - Add method to retrieve a page of `Organization`:
 
 ```java
 return builder.addGetter(
@@ -112,7 +109,9 @@ return builder.addGetter(
 ).build();
 ```
 
-Create `_getPageItems` method:
+---
+
+12 - Create `_getPageItems` method:
 
 ```java
 private PageItems<Organization> _getPageItems(Pagination pagination) {
@@ -127,14 +126,18 @@ private PageItems<Organization> _getPageItems(Pagination pagination) {
 }
 ```
 
-Inject `OrganizationLocalService`:
+---
+
+13 - Inject `OrganizationLocalService`:
 
 ```java
 @Reference
 private OrganizationLocalService _organizationLocalService;
 ```
 
-Get user specific organizations:
+---
+
+14 - Get user specific organizations:
 
 ```java
 List<Organization> sites =
@@ -148,7 +151,9 @@ int count = _organizationLocalService.getUserOrganizationsCount(
 return new PageItems<>(sites, count);
 ```
 
-Create `CurrentUser` class:
+---
+
+15 - Create `CurrentUser` class:
 
 ```java
 public class CurrentUser extends UserWrapper {
@@ -160,14 +165,18 @@ public class CurrentUser extends UserWrapper {
 }
 ```
 
-Update gradle dependencies:
+---
+
+16 - Update gradle dependencies:
 
 ```gradle
 compileOnly group: "javax.portlet", name: "portlet-api", version: "3.0.0"
 compileOnly group: "javax.servlet", name: "javax.servlet-api", version: "3.0.1"
 ```
 
-Create `Provider` for `CurrentUser`:
+---
+
+17 - Create `Provider` for `CurrentUser`:
 
 ```java
 @Component
@@ -192,14 +201,18 @@ public class CurrentUserProvider implements Provider<CurrentUser> {
 }
 ```
 
-Update `_getPageItems` signature:
+---
+
+18 - Update `_getPageItems` signature:
 
 ```java
 private PageItems<Organization> _getPageItems(
 	Pagination pagination, Long userId) {
 ```
 
-Create second `_getPageItems` that receives `CurrentUser`:
+---
+
+19 - Create second `_getPageItems` that receives `CurrentUser`:
 
 ```java
 private PageItems<Organization> _getPageItems(
@@ -217,27 +230,35 @@ private PageItems<Organization> _getPageItems(
 }
 ```
 
-In order to use the second `_getPageItems` in the `collectionRoutes` we need to add the provided class:
+---
+
+20 - In order to use the second `_getPageItems` in the `collectionRoutes` we need to add the provided class:
 
 ```java
 this::_getPageItems, CurrentUser.class
 ```
 
-Complete `Representor` so we can see something on the response:
+---
+
+21 - Complete `Representor` so we can see something on the response:
 
 ```java
 ).addString(
     "name", Organization::getName
 ```
 
-Add `Organization` logo URL with `addRelativeURL`:
+---
+
+22 - Add `Organization` logo URL with `addRelativeURL`:
 
 ```java
 ).addRelativeURL(
     "logo", this::_getLogoURL
 ```
 
-Create method for obtaining an `Organization` logo URL:
+---
+
+23 - Create method for obtaining an `Organization` logo URL:
 
 ```java
 private String _getLogoURL(Organization organization) {
@@ -259,14 +280,18 @@ private String _getLogoURL(Organization organization) {
 private Portal _portal;
 ```
 
-Let's model restaurants instead of organizations:
+---
+
+24 - Let's model restaurants instead of organizations:
 
 ```java
 return builder.types(
 	"Restaurant"
 ```
 
-Don't forget to change the API name:
+---
+
+25 - Don't forget to change the API name:
 
 ```java
 public String getName() {
@@ -274,21 +299,27 @@ public String getName() {
 }
 ```
 
-And rename `OrganizationIdentifier` to `RestaurantIdentifier`:
+---
+
+26 - And rename `OrganizationIdentifier` to `RestaurantIdentifier`:
 
 ```java
 public interface RestaurantIdentifier extends Identifier<Long> {
 }
 ```
 
-Create `PersonIdentifier`:
+---
+
+27 - Create `PersonIdentifier`:
 
 ```java
 public interface PersonIdentifier extends Identifier<Long> {
 }
 ```
 
-Create `PersonItemResource`:
+---
+
+28 - Create `PersonItemResource`:
 
 ```java
 @Component
@@ -297,7 +328,9 @@ public class PersonItemResource
 }
 ```
 
-Implement interface:
+---
+
+29 - Implement interface:
 
 ```java
 @Override
@@ -320,14 +353,18 @@ public Representor<User> representor(
 }
 ```
 
-Inject `UserService`:
+---
+
+30 - Inject `UserService`:
 
 ```java
 @Reference
 private UserService _userService;
 ```
 
-Add method for obtaining persons:
+---
+
+31 - Add method for obtaining persons:
 
 ```java
 return builder.addGetter(
@@ -335,7 +372,9 @@ return builder.addGetter(
 ).build();
 ```
 
-Update `Person` representor:
+---
+
+32 - Update `Person` representor:
 
 ```java
 return builder.types(
@@ -357,14 +396,18 @@ return builder.types(
 ).build();
 ```
 
-Add person gender to the representor:
+---
+
+33 - Add person gender to the representor:
 
 ```java
 ).addString(
 	"gender", PersonItemResource::_getGender
 ```
 
-Create method `_getGender`:
+---
+
+34 - Create method `_getGender`:
 
 ```java
 private static String _getGender(User user) {
@@ -378,14 +421,18 @@ private static String _getGender(User user) {
 }
 ```
 
-Add person image to the representor:
+---
+
+35 - Add person image to the representor:
 
 ```java
 ).addRelativeURL(
 	"image", this::_getPortraitURL
 ```
 
-Add method `_getPortraitURL`:
+---
+
+36 - Add method `_getPortraitURL`:
 
 ```java
 private String _getPortraitURL(User user) {
@@ -402,14 +449,18 @@ private String _getPortraitURL(User user) {
 private Portal _portal;
 ```
 
-Add linked model to `Restaurant` employee:
+---
+
+37 - Add linked model to `Restaurant` employee:
 
 ```java
 ).addLinkedModel(
 	"employee", PersonIdentifier.class, this::_getChefId
 ```
 
-Create `_getChefId` method:
+---
+
+38 - Create `_getChefId` method:
 
 ```java
 private Long _getChefId(Organization organization) {
@@ -444,7 +495,9 @@ private RoleLocalService _roleLocalService;
 private UserGroupRoleLocalService _userGroupRoleLocalService;
 ```
 
-Add nested field `location` to add the restaurant's address:
+---
+
+39 - Add nested field `location` to add the restaurant's address:
 
 ```java
 ).addNested(
@@ -458,14 +511,18 @@ Add nested field `location` to add the restaurant's address:
     ).build()
 ```
 
-Add field for exposing address region:
+---
+
+40 - Add field for exposing address region:
 
 ```java
 ).addString(
 	"addressRegion", this::_getRegion
 ```
 
-Create `_getRegion` method:
+---
+
+41 - Create `_getRegion` method:
 
 ```java
 private String _getRegion(Address address) {
@@ -479,14 +536,18 @@ private String _getRegion(Address address) {
 }
 ```
 
-Add field for exposing address country:
+---
+
+42 - Add field for exposing address country:
 
 ```java
 ).addString(
 	"addressCountry", this::_getCountry
 ```
 
-Create `_getCountry` method:
+---
+
+43 - Create `_getCountry` method:
 
 ```java
 private String _getCountry(Address address) {
@@ -500,14 +561,18 @@ private String _getCountry(Address address) {
 }
 ```
 
-We can make this field locatable:
+---
+
+44 - We can make this field locatable:
 
 ```java
 ).addLocalizedStringByLocale(
 	"addressCountry", this::_getCountry
 ```
 
-And then update `_getCountry` method:
+---
+
+45 - And then update `_getCountry` method:
 
 ```java
 private String _getCountry(Address address, Locale locale) {
@@ -521,14 +586,18 @@ private String _getCountry(Address address, Locale locale) {
 }
 ```
 
-Create `RecipeIdentifier`:
+---
+
+46 - Create `RecipeIdentifier`:
 
 ```java
 public interface RecipeIdentifier extends Identifier<Long> {
 }
 ```
 
-Create `RecipesItemResource`:
+---
+
+47 - Create `RecipesItemResource`:
 
 ```java
 @Component
@@ -557,20 +626,26 @@ public class RecipesItemResource
 }
 ```
 
-Give it a name:
+---
+
+48 - Give it a name:
 
 ```java
 return "recipe";
 ```
 
-Inject `RecipeService`:
+---
+
+49 - Inject `RecipeService`:
 
 ```java
 @Reference
 private RecipeService _recipeService;
 ```
 
-Add method for obtaining a single recipe to `itemRoutes`:
+---
+
+50 - Add method for obtaining a single recipe to `itemRoutes`:
 
 ```java
 return builder.addGetter(
@@ -578,7 +653,9 @@ return builder.addGetter(
 ).build();
 ```
 
-Complete the minimum `Representor`:
+---
+
+51 - Complete the minimum `Representor`:
 
 ```java
 return builder.types(
@@ -588,7 +665,9 @@ return builder.types(
 ).build();
 ```
 
-Add a bidirectional relation between restaurants and recipes:
+---
+
+52 - Add a bidirectional relation between restaurants and recipes:
 
 ```java
 ).addBidirectionalModel(
@@ -596,7 +675,9 @@ Add a bidirectional relation between restaurants and recipes:
 	this::_getOrganizationId
 ```
 
-Create `_getOrganizationId` method:
+---
+
+53 - Create `_getOrganizationId` method:
 
 ```java
 private Long _getOrganizationId(Recipe recipe) {
@@ -613,7 +694,9 @@ private Long _getOrganizationId(Recipe recipe) {
 private GroupLocalService _groupLocalService;
 ```
 
-Create `RecipeNestedCollectionRouter`:
+---
+
+54 - Create `RecipeNestedCollectionRouter`:
 
 ```java
 @Component
@@ -622,7 +705,9 @@ public class RecipeNestedCollectionRouter implements
 		<Recipe, Long, RecipeIdentifier, Long, RestaurantIdentifier> {
 ```
 
-Implement interface:
+---
+
+55 - Implement interface:
 
 ```java
 @Component
@@ -640,7 +725,9 @@ public class RecipeNestedCollectionRouter implements
 }
 ```
 
-Add method for obtaining a page of a restaurant recipes:
+---
+
+56 - Add method for obtaining a page of a restaurant recipes:
 
 ```java
 return builder.addGetter(
@@ -648,7 +735,9 @@ return builder.addGetter(
 ).build();
 ```
 
-Implement `_getPageItems` method:
+---
+
+57 - Implement `_getPageItems` method:
 
 ```java
 private PageItems<Recipe> _getPageItems(
@@ -670,7 +759,9 @@ private PageItems<Recipe> _getPageItems(
 }
 ```
 
-Merge `RecipeItemResource` and `RecipeNestedCollectionRouter` into `RecipeNestedCollectionResource`:
+---
+
+58 - Merge `RecipeItemResource` and `RecipeNestedCollectionRouter` into `RecipeNestedCollectionResource`:
 
 ```java
 @Component
@@ -678,84 +769,12 @@ public class RecipeNestedCollectionResource
 	implements NestedCollectionResource
 		<Recipe, Long, RecipeIdentifier, Long, RestaurantIdentifier> {
 
-	@Override
-	public String getName() {
-		return "recipe";
-	}
-
-	@Override
-	public ItemRoutes<Recipe, Long> itemRoutes(
-		ItemRoutes.Builder<Recipe, Long> builder) {
-
-		return builder.addGetter(
-			_recipeService::getRecipe
-		).build();
-	}
-
-	@Override
-	public Representor<Recipe> representor(
-		Representor.Builder<Recipe, Long> builder) {
-
-		return builder.types(
-			"Recipe"
-		).identifier(
-			Recipe::getRecipeId
-		).addBidirectionalModel(
-			"restaurant", "recipes", RestaurantIdentifier.class,
-			this::_getOrganizationId
-		).build();
-	}
-
-	@Override
-	public NestedCollectionRoutes<Recipe, Long, Long> collectionRoutes(
-		NestedCollectionRoutes.Builder<Recipe, Long, Long> builder) {
-
-		return builder.addGetter(
-			this::_getPageItems
-		).build();
-	}
-
-	private PageItems<Recipe> _getPageItems(
-		Pagination pagination, long organizationId)
-		throws PortalException {
-
-		Organization organization = _organizationService.getOrganization(
-			organizationId);
-
-		long groupId = organization.getGroupId();
-
-		List<Recipe> recipes = _recipeService.getRecipesByGroupId(
-			groupId, pagination.getStartPosition(),
-			pagination.getEndPosition());
-
-		int count = _recipeService.getRecipesCountByGroupId(groupId);
-
-		return new PageItems<>(recipes, count);
-	}
-
-	private Long _getOrganizationId(Recipe recipe) {
-		return Try.fromFallible(
-			() -> _groupLocalService.getGroup(recipe.getGroupId())
-		).map(
-			Group::getOrganizationId
-		).orElse(
-			null
-		);
-	}
-
-	@Reference
-	private GroupLocalService _groupLocalService;
-
-	@Reference
-	private RecipeService _recipeService;
-
-	@Reference
-	private OrganizationService _organizationService;
-
 }
 ```
 
-Add "easy" fields to the `Recipe` representor:
+---
+
+59 - Add "easy" fields to the `Recipe` representor:
 
 ```java
 ).addDate(
@@ -776,7 +795,9 @@ Add "easy" fields to the `Recipe` representor:
 	"creator", PersonIdentifier.class, Recipe::getUserId
 ```
 
-Add nested field for exposing youtube video information:
+---
+
+60 - Add nested field for exposing youtube video information:
 
 ```java
 ).addNested(
@@ -790,14 +811,18 @@ Add nested field for exposing youtube video information:
     ).build()
 ```
 
-Add information about the recipe's category:
+---
+
+61 - Add information about the recipe's category:
 
 ```java
 ).addString(
 	"recipeCategory", this::_getCategory
 ```
 
-Create `_getCategory` method:
+---
+
+62 - Create `_getCategory` method:
 
 ```java
 private String _getCategory(Recipe recipe) {
@@ -818,14 +843,18 @@ private String _getCategory(Recipe recipe) {
 private AssetCategoryLocalService _assetCategoryLocalService;
 ```
 
-Add information about the recipe's cook time:
+---
+
+63 - Add information about the recipe's cook time:
 
 ```java
 ).addString(
     "cookTime", this::_getCookTime
 ```
 
-Create `_getCookTime` method:
+---
+
+64 - Create `_getCookTime` method:
 
 ```java
 private String _getCookTime(Recipe recipe) {
@@ -834,14 +863,18 @@ private String _getCookTime(Recipe recipe) {
 }
 ```
 
-Add information about the recipe's tags:
+---
+
+65 - Add information about the recipe's tags:
 
 ```java
 ).addStringList(
 	"keywords", this::_getRecipeAssetTags
 ```
 
-Create `_getRecipeAssetTags` method:
+---
+
+66 - Create `_getRecipeAssetTags` method:
 
 ```java
 private List<String> _getRecipeAssetTags(Recipe recipe) {
@@ -855,14 +888,18 @@ private List<String> _getRecipeAssetTags(Recipe recipe) {
 private AssetTagLocalService _assetTagLocalService;
 ```
 
-Add recipe's image to the representor:
+---
+
+67 - Add recipe's image to the representor:
 
 ```java
 ).addBinary(
 	"image", this::_getImageBinaryFile
 ```
 
-Create `_getImageBinaryFile`:
+---
+
+68 - Create `_getImageBinaryFile`:
 
 ```java
 private BinaryFile _getImageBinaryFile(Recipe recipe) {
