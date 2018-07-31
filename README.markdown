@@ -39,6 +39,10 @@ Specifically, once the packages are deployed, the following data will be created
 - [Around 25 kitchen assistants](https://github.com/liferay-labs/apio-workshop/blob/master/liferay-recipes-demo/src/main/java/com/liferay/recipes/demo/internal/RecipesDemo.java#L207) that will be assigned to between 1 and 5 restaurants. This assistants will have only permission to see the restaurants they are assigned to, and their recipes.
 - [Around 25 recipes per-restaurant](https://github.com/liferay-labs/apio-workshop/blob/master/liferay-recipes-demo/src/main/java/com/liferay/recipes/demo/internal/RecipesDemo.java#L329).
 
+## Launch client app
+
+For launching the client app you just have to run `./gradlew startApp`. Then navigate to [http://localhost:4200](http://localhost:4200) on your preferred browser.
+
 ## Code time!
 
 The steps for the workshop can be found [here](docs/STEPS.markdown).

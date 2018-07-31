@@ -79,6 +79,20 @@ configure(subprojects.findAll {!it.childProjects}) {
 	}
 }
 
+task installApp(type: Exec) {
+	ignoreExitValue true
+
+	commandLine 'npm', 'install'
+}
+
+task startApp(type: Exec) {
+	dependsOn installApp
+
+	ignoreExitValue true
+
+	commandLine 'npm', 'start'
+}
+
 task stopDocker(type: Exec) {
 	ignoreExitValue true
 
