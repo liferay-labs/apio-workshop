@@ -14,23 +14,23 @@ import { RecipeDetailComponent } from './recipe-detail/recipe-detail.component';
 import { HeaderComponent } from './header/header.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    RestaurantComponent,
-    RecipesComponent,
-    LoginComponent,
-    RecipeDetailComponent,
-    HeaderComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    ClarityModule,
-    BrowserAnimationsModule,
-    HttpModule,
-    FormsModule
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
+declarations: [
+	AppComponent,
+	RestaurantComponent,
+	RecipesComponent,
+	LoginComponent,
+	RecipeDetailComponent,
+	HeaderComponent
+],
+imports: [
+	BrowserModule,
+	AppRoutingModule,
+	ClarityModule,
+	BrowserAnimationsModule,
+	HttpModule,
+	FormsModule
+],
+providers: [],
+bootstrap: [AppComponent]
 })
 export class AppModule { }

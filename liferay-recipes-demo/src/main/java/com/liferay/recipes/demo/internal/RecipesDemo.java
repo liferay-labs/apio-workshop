@@ -101,7 +101,7 @@ public class RecipesDemo extends BasePortalInstanceLifecycleListener {
 		_log.info(
 			"All data has been created. You can use the commands " +
 				"`apio:restaurants` and `apio:assistants` to retrieve the " +
-				"list of restaurants and assistants respectively.");
+					"list of restaurants and assistants respectively.");
 	}
 
 	/**

@@ -2,14 +2,13 @@ import { Component } from '@angular/core';
 import ApioConsumer from 'apio-consumer';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+selector: 'app-root',
+templateUrl: './app.component.html',
+styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'test';
+title = 'test';
 
-
-  constructor() {
-  }
+constructor() {
+}
 }

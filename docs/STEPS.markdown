@@ -26,7 +26,7 @@ public class RestaurantCollectionResource implements CollectionResource<> {
 3 - Fill up the `CollectionResource`'s type params:
 
 ```java
-public class RestaurantCollectionResource implements 
+public class RestaurantCollectionResource implements
 	CollectionResource<Organization, Long, ?> {
 }
 ```
@@ -47,7 +47,7 @@ public interface OrganizationIdentifier extends Identifier<Long> {
 ```java
 public class RestaurantCollectionResource implements
 	CollectionResource<Organization, Long, OrganizationIdentifier> {
-	
+
 }
 ```
 
@@ -603,7 +603,7 @@ public interface RecipeIdentifier extends Identifier<Long> {
 @Component
 public class RecipesItemResource
 	implements ItemResource<Recipe, Long, RecipeIdentifier> {
-	
+
 	@Override
 	public String getName() {
 		return null;
@@ -700,7 +700,7 @@ private GroupLocalService _groupLocalService;
 
 ```java
 @Component
-public class RecipeNestedCollectionRouter implements 
+public class RecipeNestedCollectionRouter implements
 	NestedCollectionRouter
 		<Recipe, Long, RecipeIdentifier, Long, RestaurantIdentifier> {
 ```
@@ -711,17 +711,17 @@ public class RecipeNestedCollectionRouter implements
 
 ```java
 @Component
-public class RecipeNestedCollectionRouter implements 
+public class RecipeNestedCollectionRouter implements
 	NestedCollectionRouter
 		<Recipe, Long, RecipeIdentifier, Long, RestaurantIdentifier> {
-	
+
 	@Override
 	public NestedCollectionRoutes<Recipe, Long, Long> collectionRoutes(
 		Builder<Recipe, Long, Long> builder) {
-		
+
 		return null;
 	}
-	
+
 }
 ```
 
