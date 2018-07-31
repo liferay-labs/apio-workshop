@@ -7,3 +7,4 @@ out
 *.iml
 liferay-recipes-uad/
 liferay-recipes-uad-test
+node_modules
