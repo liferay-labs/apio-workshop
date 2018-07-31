@@ -13,3 +13,5 @@ buildscript {
 }
 
 apply plugin: "com.liferay.settings.plugin"
+
+include 'restaurant-app'

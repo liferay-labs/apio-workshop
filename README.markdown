@@ -41,7 +41,7 @@ Specifically, once the packages are deployed, the following data will be created
 
 ## Launch client app
 
-For launching the client app you just have to run `./gradlew startApp`. Then navigate to [http://localhost:4200](http://localhost:4200) on your preferred browser.
+For launching the client app you just have to run `../gradlew startApp` from the `restaurant-app` directory. Then navigate to [http://localhost:4200](http://localhost:4200) on your preferred browser.
 
 ## Code time!
 
