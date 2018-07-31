@@ -29,5 +29,5 @@ Deploys the application jars into the Liferay Portal instance. This command shou
 alias dgogo='docker exec -ti liferay telnet localhost 11311'
 
 # Opens the Liferay Portal logs
-alias dlog='docker exec -i liferay tail -f /liferay/logs/liferay.2018-07-30.log'
+alias dlog="docker exec -i liferay tail -f /liferay/logs/liferay.\`date +'%Y-%m-%d'\`.log"
 ```
