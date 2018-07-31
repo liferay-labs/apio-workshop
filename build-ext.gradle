@@ -79,18 +79,24 @@ configure(subprojects.findAll {!it.childProjects}) {
 	}
 }
 
-task installApp(type: Exec) {
-	ignoreExitValue true
+configure(subprojects.findAll {it.name.equals('restaurant-app')}) {
+	task installApp (type: Exec) {
+		doFirst {
+			ignoreExitValue true
 
-	commandLine 'npm', 'install'
-}
+			commandLine 'npm', 'install'
+		}
+	}
 
-task startApp(type: Exec) {
-	dependsOn installApp
+	task startApp(type: Exec) {
+		dependsOn installApp
 
-	ignoreExitValue true
+		doFirst {
+			ignoreExitValue true
 
-	commandLine 'npm', 'start'
+			commandLine 'npm', 'start'
+		}
+	}
 }
 
 task stopDocker(type: Exec) {
