@@ -1,0 +1,18 @@
+allprojects {
+    repositories {
+        mavenLocal()
+
+        flatDir {
+            dirs 'dependencies'
+        }
+        maven {
+            url "https://repository-cdn.liferay.com/nexus/content/groups/public"
+        }
+    }
+}
+
+configure(subprojects.findAll { !it.childProjects }) {
+    liferay {
+        deployDir = new File("../../workshop/dependencies")
+    }
+}

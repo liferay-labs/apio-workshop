@@ -1,0 +1,4 @@
+Bundle-Name: Liferay Recipes Workshop Helper
+Bundle-SymbolicName: com.liferay.recipes.workshop.helper
+Bundle-Version: 1.0.0
+Export-Package: com.liferay.recipes.workshop.helper

@@ -1,0 +1,151 @@
+import aQute.bnd.gradle.Bundle
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'biz.aQute.bnd:biz.aQute.bnd.gradle:4.1.0'
+    }
+}
+
+plugins {
+    id 'java'
+}
+
+repositories {
+    mavenCentral()
+}
+
+task bundle(type: Bundle) {
+    description 'Bundle'
+    group 'build'
+    from sourceSets.main.output
+    bnd += 'Bundle-Name: Apio Architect Workshop'
+    bnd += 'Bundle-SymbolicName: apio.architect.workshop'
+    version = '1.0.0'
+}
+
+task copyApioArchitect(type: Copy) {
+    doFirst {
+        println "Overriding Apio Architect version..."
+    }
+    from("dependencies")
+    into osgiMarketplaceOverride()
+    include '*.apio.architect.*.jar'
+}
+
+task copyPortalExtProperties(type: Copy) {
+    doFirst {
+        println "Copying portal-ext.properties"
+    }
+    from("dependencies/portal-ext.properties")
+    into liferayHome()
+}
+
+task copyConfigs(type: Copy) {
+    doFirst {
+        println "Updating configuration files"
+    }
+    from("dependencies")
+    into osgiConfigs()
+    include '*.cfg'
+}
+
+task copyDependencies(type: Copy) {
+    doFirst {
+        println "Copying dependencies"
+    }
+    from("dependencies")
+    into osgiModules()
+    include '*.jar'
+    exclude '*.apio.architect.*.jar'
+}
+
+task prepare {
+    dependsOn copyApioArchitect
+    dependsOn copyConfigs
+    dependsOn copyPortalExtProperties
+    dependsOn copyDependencies
+    doLast {
+        println "Your Liferay Portal instance is ready to run. Call `${liferayHome()}/tomcat-9.0.10/bin/catalina.sh jpda run`"
+    }
+}
+
+task deploy(type: Copy) {
+    dependsOn bundle
+    from(bundle)
+    into deploy()
+    doLast {
+        println "Succesfully deployed into ${liferayHome()}"
+    }
+}
+
+def liferayHome() {
+    if (project.hasProperty('liferay.home')) {
+        def liferayHome = new File(project.properties.get('liferay.home').toString())
+
+        if (!liferayHome.exists()) {
+            throw new GradleException("Liferay Home defined in `liferay.home` property does not exist: $liferayHome")
+        }
+
+        return liferayHome
+    }
+
+    def liferayHomeEnv = System.getenv("LIFERAY_HOME")
+
+    if (liferayHomeEnv != null) {
+        def liferayHome = new File(liferayHomeEnv)
+
+        if (!liferayHome.exists()) {
+            throw new GradleException("Liferay Home defined in `LIFERAY_HOME` environment variable does not exist: $liferayHome")
+        }
+
+        return liferayHome
+    }
+
+    def portalGA2 = new File("../../liferay-ce-portal-7.1.1-ga2")
+
+    if (portalGA2.exists()) {
+        return portalGA2
+    }
+
+    def bundles = new File("../../bundles")
+
+    if (bundles.exists()) {
+        return bundles
+    }
+
+    throw new GradleException(
+            """Unable to calculate Liferay Home. You can set your Liferay Home by...
+        - Setting the property `liferay.home` in your `gradle.properties` file. Or...
+        - Setting the environment variable `LIFERAY_HOME`. Or...
+        - Unzipping a Liferay CE Portal 7.1 GA2 next to the workshop repository. Or...
+        - Unzipping a Liferay Portal with name `bundles` next to the workshop repository.""")
+}
+
+def deploy() {
+    return new File(liferayHome(), "deploy")
+}
+
+def osgiModules() {
+    return new File(liferayHome(), "/osgi/modules")
+}
+
+def osgiConfigs() {
+    return new File(liferayHome(), "/osgi/configs")
+}
+
+def osgiMarketplaceOverride() {
+    return new File(liferayHome(), "/osgi/marketplace/override")
+}
+
+dependencies {
+    compile files('dependencies/com.liferay.apio.architect.api.jar')
+    compile files('dependencies/com.liferay.recipes.api.jar')
+    compile files('dependencies/com.liferay.recipes.workshop.helper.jar')
+    compileOnly group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "3.1.0"
+    compileOnly group: "com.liferay.portal", name: "com.liferay.portal.kernel", version: "3.0.0"
+    compileOnly group: "org.osgi", name: "org.osgi.core", version: "6.0.0"
+    compileOnly group: "javax.ws.rs", name: "javax.ws.rs-api", version: "2.1"
+}

@@ -1,0 +1,27 @@
+<h1>
+Restaurants
+</h1>
+<span *ngIf="loading" class="spinner spinner-lg">
+Loading...
+</span>
+<div *ngIf="!loading">
+<clr-datagrid>
+	<clr-dg-column>Name</clr-dg-column>
+	<clr-dg-column *ngIf="restaurants[0] && restaurants[0].location">Location</clr-dg-column>
+	<clr-dg-column *ngIf="restaurants[0] && restaurants[0].logo">Logo</clr-dg-column>
+	<clr-dg-column *ngIf="restaurants[0] && restaurants[0].recipes"></clr-dg-column>
+
+	<clr-dg-row *ngFor="let restaurant of restaurants">
+	  <clr-dg-cell>{{restaurant.name}}</clr-dg-cell>
+	  <clr-dg-cell [style.display]= "restaurant.location ? '' : 'none'">{{restaurant.location?.addressRegion}}</clr-dg-cell>
+	  <clr-dg-cell [style.display]= "restaurant.logo ? '' : 'none'">
+		<img src="{{restaurant.logo}}">
+	  </clr-dg-cell>
+	  <clr-dg-cell [style.display]= "restaurant.recipes ? '' : 'none'">
+		<a routerLink="/recipes/{{restaurant.recipes}}">Show recipes</a>
+	  </clr-dg-cell>
+	</clr-dg-row>
+
+	<clr-dg-footer>{{restaurants.length}} restaurants</clr-dg-footer>
+</clr-datagrid>
+</div>

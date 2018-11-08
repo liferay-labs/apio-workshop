@@ -1,0 +1,11 @@
+.gradle/
+classes/
+build/
+target/
+.idea/
+out
+*.iml
+liferay-recipes-uad/
+liferay-recipes-uad-test
+node_modules
+liferay-recipes/liferay-recipes-rest/http/http-client.env.json
