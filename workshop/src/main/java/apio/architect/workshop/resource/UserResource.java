@@ -15,6 +15,10 @@
 package apio.architect.workshop.resource;
 
 import apio.architect.workshop.model.UserDTO;
+import apio.architect.workshop.type.UserType;
+import com.liferay.apio.architect.annotation.Actions.Retrieve;
+import com.liferay.apio.architect.annotation.Id;
+import com.liferay.apio.architect.router.ActionRouter;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserService;
@@ -22,23 +26,14 @@ import com.liferay.recipes.workshop.helper.WorkshopHelper;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-
 /**
  * @author Víctor Galán
  */
-@Component(property = "osgi.jaxrs.resource=true", service = Object.class, immediate = true)
-public class UserResource {
+@Component
+public class UserResource implements ActionRouter<UserType> {
 
-    @GET
-    @Path("users/{id}")
-    @Produces(APPLICATION_JSON)
-    public UserDTO retrieve(@PathParam("id") long userId) throws PortalException {
+    @Retrieve
+    public UserType retrieve(@Id long userId) throws PortalException {
         User user = _userService.getUserById(userId);
 
         return new UserDTO(user, _workshopHelper);

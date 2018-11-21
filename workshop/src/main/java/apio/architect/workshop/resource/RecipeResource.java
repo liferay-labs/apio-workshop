@@ -15,7 +15,16 @@
 package apio.architect.workshop.resource;
 
 import apio.architect.workshop.model.RecipeDTO;
+import apio.architect.workshop.type.OrganizationType;
+import apio.architect.workshop.type.RecipeType;
+import com.liferay.apio.architect.annotation.Actions.Retrieve;
+import com.liferay.apio.architect.annotation.Id;
+import com.liferay.apio.architect.annotation.ParentId;
+import com.liferay.apio.architect.router.ActionRouter;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.recipes.exception.NoSuchRecipeException;
 import com.liferay.recipes.model.Recipe;
 import com.liferay.recipes.service.RecipeService;
@@ -23,21 +32,31 @@ import com.liferay.recipes.workshop.helper.WorkshopHelper;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
-import javax.ws.rs.*;
-
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Alejandro Hernández
  * @author Victor Galán
  */
-@Component(immediate = true, property = "osgi.jaxrs.resource=true", service = Object.class)
-public class RecipeResource {
+@Component(immediate = true, property = "osgi.jaxrs.resource=true", service = {Object.class, ActionRouter.class})
+public class RecipeResource implements ActionRouter<RecipeType> {
 
-    @GET
-    @Path("recipes/{id}")
-    @Produces(APPLICATION_JSON)
-    public RecipeDTO retrieve(@PathParam("id") long recipeId) throws PortalException {
+    @Retrieve
+    public List<RecipeType> retrieveRecipes(@ParentId(OrganizationType.class) long organizationId, User user) throws PortalException {
+        Group organizationGroup = _groupService.getOrganizationGroup(user.getCompanyId(), organizationId);
+
+        return _recipeService.getRecipesByGroupId(organizationGroup.getGroupId(), -1, -1)
+            .stream()
+            .map(recipe -> new RecipeDTO(recipe, _workshopHelper))
+            .collect(Collectors.toList());
+    }
+
+    @Retrieve
+    public RecipeType retrieve(@Id long recipeId) throws PortalException {
         Recipe recipe = _recipeService.getRecipe(recipeId);
 
         return new RecipeDTO(recipe, _workshopHelper);
@@ -52,6 +71,9 @@ public class RecipeResource {
 
         }
     }
+
+    @Reference
+    private GroupLocalService _groupService;
 
     @Reference
     private RecipeService _recipeService;

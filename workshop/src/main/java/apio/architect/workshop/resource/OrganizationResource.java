@@ -16,6 +16,11 @@ package apio.architect.workshop.resource;
 
 import apio.architect.workshop.model.OrganizationDTO;
 import apio.architect.workshop.model.RecipeDTO;
+import apio.architect.workshop.type.OrganizationType;
+import com.liferay.apio.architect.annotation.Actions.EntryPoint;
+import com.liferay.apio.architect.annotation.Actions.Retrieve;
+import com.liferay.apio.architect.annotation.Id;
+import com.liferay.apio.architect.router.ActionRouter;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Organization;
@@ -43,38 +48,23 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
  * @author Alejandro Hernández
  * @author Victor Galán
  */
-@Component(immediate = true, property = "osgi.jaxrs.resource=true", service = Object.class)
-public class OrganizationResource {
+@Component(immediate = true, property = "osgi.jaxrs.resource=true", service = {Object.class, ActionRouter.class})
+public class OrganizationResource implements ActionRouter<OrganizationType> {
 
-    @GET
-    @Produces(APPLICATION_JSON)
-    @Path("organizations")
-    public List<OrganizationDTO> retrieve(@Context User user) throws PortalException {
+    @EntryPoint
+    @Retrieve
+    public List<OrganizationType> retrieve(User user) throws PortalException {
         return _organizationService.getUserOrganizations(user.getUserId())
             .stream()
             .map(organization -> new OrganizationDTO(organization, _workshopHelper))
             .collect(Collectors.toList());
     }
 
-    @GET
-    @Path("organizations/{id}")
-    @Produces(APPLICATION_JSON)
-    public OrganizationDTO retrieve(@PathParam("id") long id) throws PortalException {
+    @Retrieve
+    public OrganizationType retrieve(@Id long id) throws PortalException {
         Organization organization = _organizationService.getOrganization(id);
 
         return new OrganizationDTO(organization, _workshopHelper);
-    }
-
-    @GET
-    @Path("organizations/{id}/recipes")
-    @Produces(APPLICATION_JSON)
-    public List<RecipeDTO> retrieveRecipes(@PathParam("id") long organizationId, @Context User user) throws PortalException {
-        Group organizationGroup = _groupService.getOrganizationGroup(user.getCompanyId(), organizationId);
-
-        return _recipeService.getRecipesByGroupId(organizationGroup.getGroupId(), -1, -1)
-            .stream()
-            .map(recipe -> new RecipeDTO(recipe, _workshopHelper))
-            .collect(Collectors.toList());
     }
 
     @POST
