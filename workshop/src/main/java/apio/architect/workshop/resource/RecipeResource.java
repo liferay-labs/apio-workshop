@@ -17,7 +17,10 @@ package apio.architect.workshop.resource;
 import apio.architect.workshop.model.RecipeDTO;
 import apio.architect.workshop.type.OrganizationType;
 import apio.architect.workshop.type.RecipeType;
+import com.liferay.apio.architect.annotation.Actions.Create;
+import com.liferay.apio.architect.annotation.Actions.Remove;
 import com.liferay.apio.architect.annotation.Actions.Retrieve;
+import com.liferay.apio.architect.annotation.Body;
 import com.liferay.apio.architect.annotation.Id;
 import com.liferay.apio.architect.annotation.ParentId;
 import com.liferay.apio.architect.pagination.PageItems;
@@ -26,7 +29,9 @@ import com.liferay.apio.architect.router.ActionRouter;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.service.GroupLocalService;
+import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.recipes.exception.NoSuchRecipeException;
 import com.liferay.recipes.model.Recipe;
 import com.liferay.recipes.service.RecipeService;
@@ -34,9 +39,8 @@ import com.liferay.recipes.workshop.helper.WorkshopHelper;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
-import javax.ws.rs.DELETE;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import java.time.Duration;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,7 +48,7 @@ import java.util.stream.Collectors;
  * @author Alejandro Hernández
  * @author Victor Galán
  */
-@Component(immediate = true, property = "osgi.jaxrs.resource=true", service = {Object.class, ActionRouter.class})
+@Component
 public class RecipeResource implements ActionRouter<RecipeType> {
 
     @Retrieve
@@ -69,9 +73,32 @@ public class RecipeResource implements ActionRouter<RecipeType> {
         return new RecipeDTO(recipe, _workshopHelper);
     }
 
-    @DELETE
-    @Path("recipes/{id}")
-    public void delete(@PathParam("id") long recipeId) throws PortalException {
+    @Create
+    public RecipeType create(@ParentId(OrganizationType.class) long organizationId, User user, @Body RecipeType recipeType) throws PortalException {
+        Group organizationGroup = _groupService.getOrganizationGroup(user.getCompanyId(), organizationId);
+
+        FileEntry recipeImage = _workshopHelper.createRecipeImage(
+            user.getUserId(), organizationGroup.getGroupId(), recipeType.getImageURL());
+
+        Duration cookTime = Duration.parse(recipeType.getCookTime());
+        int hoursToMake = (int) cookTime.toHours();
+        int minutesToMake = (int) cookTime.toMinutes() % 60;
+
+        ServiceContext serviceContext = _workshopHelper.getRecipeServiceContext(
+            user.getUserId(), organizationGroup.getGroupId(), recipeType.getCategory(), recipeType.getRecipeAssetTags());
+
+        Date publishedDate = recipeType.getPublishedDate() == null ? new Date() : recipeType.getPublishedDate();
+
+        Recipe recipe = _recipeService.addRecipe(
+            recipeType.getName(), recipeType.getRegion(), recipeImage.getFileEntryId(), publishedDate,
+            hoursToMake, minutesToMake, recipeType.getSteps(), recipeType.getIngredients(),
+            recipeType.getVideoURL(), serviceContext);
+
+        return new RecipeDTO(recipe, _workshopHelper);
+    }
+
+    @Remove
+    public void remove(@Id long recipeId) throws PortalException {
         try {
             _recipeService.deleteRecipe(recipeId);
         } catch (NoSuchRecipeException ignore) {
