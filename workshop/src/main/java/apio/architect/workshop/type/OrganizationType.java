@@ -16,10 +16,7 @@ package apio.architect.workshop.type;
 
 import apio.architect.workshop.model.AddressDTO;
 import com.liferay.apio.architect.annotation.Id;
-import com.liferay.apio.architect.annotation.Vocabulary.Field;
-import com.liferay.apio.architect.annotation.Vocabulary.LinkedModel;
-import com.liferay.apio.architect.annotation.Vocabulary.RelativeURL;
-import com.liferay.apio.architect.annotation.Vocabulary.Type;
+import com.liferay.apio.architect.annotation.Vocabulary.*;
 import com.liferay.apio.architect.identifier.Identifier;
 
 /**
@@ -44,5 +41,11 @@ public interface OrganizationType extends Identifier<Long> {
 
     @Field("address")
     public AddressDTO getAddress();
+
+    @Field("recipe")
+    @RelatedCollection(RecipeType.class)
+    public default long getRecipeCollection() {
+        return getId();
+    }
 
 }
