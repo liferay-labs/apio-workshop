@@ -14,27 +14,23 @@
 
 package apio.architect.workshop.exception.mapper;
 
+import com.liferay.apio.architect.error.APIError;
+import com.liferay.apio.architect.exception.mapper.ExceptionMapper;
 import com.liferay.portal.kernel.exception.NoSuchModelException;
 import org.osgi.service.component.annotations.Component;
 
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
-
-import static javax.ws.rs.core.MediaType.TEXT_PLAIN_TYPE;
 import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 
 /**
  * @author Alejandro Hernández
  */
-@Component(immediate = true, property = "osgi.jaxrs.extension=true")
+@Component
 public class NoSuchModelExceptionMapper implements ExceptionMapper<NoSuchModelException> {
 
     @Override
-    public Response toResponse(NoSuchModelException noSuchModelException) {
-        return Response.status(NOT_FOUND)
-            .type(TEXT_PLAIN_TYPE)
-            .entity(noSuchModelException.getMessage())
-            .build();
+    public APIError map(NoSuchModelException noSuchModelException) {
+        return new APIError(
+            noSuchModelException, NOT_FOUND.getReasonPhrase(), noSuchModelException.getMessage(), "not-found", 404);
     }
 
 }
