@@ -14,22 +14,14 @@
 
 package apio.architect.workshop.model;
 
+import apio.architect.workshop.type.OrganizationType;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.recipes.workshop.helper.WorkshopHelper;
-
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * @author Víctor Galán
  */
-
-@SuppressWarnings("unused")
-@XmlRootElement
-public class OrganizationDTO {
-
-    public OrganizationDTO() {
-    }
+public class OrganizationDTO implements OrganizationType {
 
     public OrganizationDTO(Organization organization, WorkshopHelper workshopHelper) {
         id = organization.getOrganizationId();
@@ -39,27 +31,27 @@ public class OrganizationDTO {
         chefId = workshopHelper.getChefId(organization);
     }
 
-    @XmlElement(name = "chefId")
+    @Override
     public Long getChefId() {
         return chefId;
     }
 
-    @XmlElement(name = "id")
+    @Override
     public long getId() {
         return id;
     }
 
-    @XmlElement(name = "name")
+    @Override
     public String getName() {
         return name;
     }
 
-    @XmlElement(name = "logoURL")
+    @Override
     public String getLogoURL() {
         return logoURL;
     }
 
-    @XmlElement(name = "address")
+    @Override
     public AddressDTO getAddress() {
         return address;
     }

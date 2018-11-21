@@ -14,25 +14,17 @@
 
 package apio.architect.workshop.model;
 
+import apio.architect.workshop.type.RecipeType;
 import com.liferay.recipes.model.Recipe;
 import com.liferay.recipes.workshop.helper.WorkshopHelper;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 import java.util.List;
 
 /**
  * @author Víctor Galán
  */
-
-@SuppressWarnings("unused")
-@XmlRootElement
-public class RecipeDTO {
-
-    public RecipeDTO() {
-
-    }
+public class RecipeDTO implements RecipeType {
 
     public RecipeDTO(Recipe recipe, WorkshopHelper workshopHelper) {
         id = recipe.getRecipeId();
@@ -51,131 +43,76 @@ public class RecipeDTO {
         imageURL = workshopHelper.getImageURL(recipe);
     }
 
-    @XmlElement(name = "createDate")
+    @Override
     public Date getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
-
-    @XmlElement(name = "modifiedDate")
+    @Override
     public Date getModifiedDate() {
         return modifiedDate;
     }
 
-    public void setModifiedDate(Date modifiedDate) {
-        this.modifiedDate = modifiedDate;
-    }
-
-    @XmlElement(name = "publishedDate")
+    @Override
     public Date getPublishedDate() {
         return publishedDate;
     }
 
-    public void setPublishedDate(Date publishedDate) {
-        this.publishedDate = publishedDate;
-    }
-
-    @XmlElement(name = "region")
+    @Override
     public String getRegion() {
         return region;
     }
 
-    public void setRegion(String region) {
-        this.region = region;
-    }
-
-    @XmlElement(name = "ingredients")
+    @Override
     public List<String> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(List<String> ingredients) {
-        this.ingredients = ingredients;
-    }
-
-    @XmlElement(name = "steps")
+    @Override
     public List<String> getSteps() {
         return steps;
     }
 
-    public void setSteps(List<String> steps) {
-        this.steps = steps;
-    }
-
-    @XmlElement(name = "userId")
+    @Override
     public long getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
-    }
-
-    @XmlElement(name = "id")
+    @Override
     public long getId() {
         return id;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    @XmlElement(name = "videoURL")
+    @Override
     public String getVideoURL() {
         return videoURL;
     }
 
-    public void setVideoURL(String videoURL) {
-        this.videoURL = videoURL;
-    }
-
-    @XmlElement(name = "cookTime")
+    @Override
     public String getCookTime() {
         return cookTime;
     }
 
-    public void setCookTime(String cookTime) {
-        this.cookTime = cookTime;
-    }
-
-    @XmlElement(name = "category")
+    @Override
     public String getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    @XmlElement(name = "recipeAssetTags")
+    @Override
     public List<String> getRecipeAssetTags() {
         return recipeAssetTags;
     }
 
-    public void setRecipeAssetTags(List<String> recipeAssetTags) {
-        this.recipeAssetTags = recipeAssetTags;
-    }
-
-    @XmlElement(name = "imageURL")
+    @Override
     public String getImageURL() {
         return imageURL;
     }
 
-    public void setImageURL(String imageURL) {
-        this.imageURL = imageURL;
-    }
-
-    @XmlElement(name = "name")
+    @Override
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
     private String name;
     private Date createDate;
     private Date modifiedDate;

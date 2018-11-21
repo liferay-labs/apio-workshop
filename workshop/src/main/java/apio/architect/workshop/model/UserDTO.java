@@ -14,21 +14,14 @@
 
 package apio.architect.workshop.model;
 
+import apio.architect.workshop.type.UserType;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.recipes.workshop.helper.WorkshopHelper;
-
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * @author Víctor Galán
  */
-@SuppressWarnings("unused")
-@XmlRootElement
-public class UserDTO {
-
-    public UserDTO() {
-    }
+public class UserDTO implements UserType {
 
     public UserDTO(User user, WorkshopHelper workshopHelper) {
         id = user.getUserId();
@@ -41,42 +34,42 @@ public class UserDTO {
         portraitURL = workshopHelper.getPortraitURL(user);
     }
 
-    @XmlElement(name = "portraitURL")
+    @Override
     public String getPortraitURL() {
         return portraitURL;
     }
 
-    @XmlElement(name = "id")
+    @Override
     public long getId() {
         return id;
     }
 
-    @XmlElement(name = "screenName")
+    @Override
     public String getScreenName() {
         return screenName;
     }
 
-    @XmlElement(name = "email")
+    @Override
     public String getEmail() {
         return email;
     }
 
-    @XmlElement(name = "firstName")
+    @Override
     public String getFirstName() {
         return firstName;
     }
 
-    @XmlElement(name = "lastName")
+    @Override
     public String getLastName() {
         return lastName;
     }
 
-    @XmlElement(name = "jobTitle")
+    @Override
     public String getJobTitle() {
         return jobTitle;
     }
 
-    @XmlElement(name = "fullName")
+    @Override
     public String getFullName() {
         return fullName;
     }

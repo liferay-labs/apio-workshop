@@ -14,21 +14,13 @@
 
 package apio.architect.workshop.model;
 
+import apio.architect.workshop.type.AddressType;
 import com.liferay.portal.kernel.model.Address;
-
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * @author Víctor Galán
  */
-@SuppressWarnings({"unused", "WeakerAccess"})
-@XmlRootElement
-public class AddressDTO {
-
-    public AddressDTO() {
-
-    }
+public class AddressDTO implements AddressType {
 
     public AddressDTO(Address address) {
         countryName = address.getCountry().getName();
@@ -37,22 +29,22 @@ public class AddressDTO {
         street = address.getStreet1();
     }
 
-    @XmlElement(name = "street")
+    @Override
     public String getStreet() {
         return street;
     }
 
-    @XmlElement(name = "zipCode")
+    @Override
     public String getZipCode() {
         return zipCode;
     }
 
-    @XmlElement(name = "regionName")
+    @Override
     public String getRegionName() {
         return regionName;
     }
 
-    @XmlElement(name = "countryName")
+    @Override
     public String getCountryName() {
         return countryName;
     }
