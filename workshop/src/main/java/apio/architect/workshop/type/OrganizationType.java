@@ -22,30 +22,30 @@ import com.liferay.apio.architect.identifier.Identifier;
 /**
  * @author Alejandro Hernández
  */
-@Type("Organization")
+@Type("Restaurant")
 public interface OrganizationType extends Identifier<Long> {
-
-    @Field("chefId")
-    @LinkedModel(UserType.class)
-    public Long getChefId();
 
     @Id
     public long getId();
 
-    @Field("name")
-    public String getName();
+    @Field(value = "chef", description = "The restaurant's chef")
+    @LinkedModel(UserType.class)
+    public Long getChefId();
 
-    @Field("logoURL")
-    @RelativeURL
-    public String getLogoURL();
-
-    @Field("address")
-    public AddressDTO getAddress();
-
-    @Field("recipe")
+    @Field("recipes")
     @RelatedCollection(RecipeType.class)
     public default long getRecipeCollection() {
         return getId();
     }
+
+    @Field("logo")
+    @RelativeURL
+    public String getLogoURL();
+
+    @Field("name")
+    public String getName();
+
+    @Field("location")
+    public AddressDTO getAddress();
 
 }

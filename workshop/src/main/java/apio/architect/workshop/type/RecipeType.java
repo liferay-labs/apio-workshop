@@ -30,44 +30,44 @@ import java.util.List;
 @Type("Recipe")
 public interface RecipeType extends Identifier<Long> {
 
-    @Field("createDate")
-    public Date getCreateDate();
-
-    @Field("modifiedDate")
-    public Date getModifiedDate();
-
-    @Field("publishedDate")
-    public Date getPublishedDate();
-
-    @Field("region")
-    public String getRegion();
-
-    @Field("ingredients")
-    public List<String> getIngredients();
-
-    @Field("steps")
-    public List<String> getSteps();
-
-    @Field("userId")
-    @LinkedModel(UserType.class)
-    public long getUserId();
-
     @Id
     public long getId();
 
-    @Field("videoURL")
+    @Field("creator")
+    @LinkedModel(UserType.class)
+    public long getUserId();
+
+    @Field("dateCreated")
+    public Date getCreateDate();
+
+    @Field("dateModified")
+    public Date getModifiedDate();
+
+    @Field("datePublished")
+    public Date getPublishedDate();
+
+    @Field("recipeCuisine")
+    public String getRegion();
+
+    @Field("recipeIngredient")
+    public List<String> getIngredients();
+
+    @Field("recipeInstructions")
+    public List<String> getSteps();
+
+    @Field("video")
     public String getVideoURL();
 
     @Field("cookTime")
     public String getCookTime();
 
-    @Field("category")
+    @Field("recipeCategory")
     public String getCategory();
 
-    @Field("recipeAssetTags")
+    @Field("keywords")
     public List<String> getRecipeAssetTags();
 
-    @Field("imageURL")
+    @Field("image")
     @RelativeURL
     public String getImageURL();
 

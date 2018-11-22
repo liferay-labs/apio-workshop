@@ -20,19 +20,19 @@ import com.liferay.apio.architect.annotation.Vocabulary.Type;
 /**
  * @author Alejandro Hernández
  */
-@Type("Address")
+@Type("PostalAddress")
 public interface AddressType {
 
-    @Field("street")
+    @Field("streetAddress")
     public String getStreet();
 
-    @Field("zipCode")
+    @Field("postalCode")
     public String getZipCode();
 
-    @Field("regionName")
+    @Field("addressRegion")
     public String getRegionName();
 
-    @Field("countryName")
+    @Field("addressCountry")
     public String getCountryName();
 
 }

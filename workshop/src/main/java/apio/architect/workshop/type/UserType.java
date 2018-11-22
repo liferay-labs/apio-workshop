@@ -23,32 +23,32 @@ import com.liferay.apio.architect.identifier.Identifier;
 /**
  * @author Alejandro Hernández
  */
-@Type("User")
+@Type("Person")
 public interface UserType extends Identifier<Long> {
-
-    @Field("portraitURL")
-    @RelativeURL
-    public String getPortraitURL();
 
     @Id
     public long getId();
 
-    @Field("screenName")
+    @Field("image")
+    @RelativeURL
+    public String getPortraitURL();
+
+    @Field("alternateName")
     public String getScreenName();
 
     @Field("email")
     public String getEmail();
 
-    @Field("firstName")
+    @Field("givenName")
     public String getFirstName();
 
-    @Field("lastName")
+    @Field("familyName")
     public String getLastName();
 
     @Field("jobTitle")
     public String getJobTitle();
 
-    @Field("fullName")
+    @Field("name")
     public String getFullName();
 
 }
