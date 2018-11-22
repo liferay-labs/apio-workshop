@@ -20,6 +20,8 @@ import apio.architect.workshop.type.RecipeType;
 import com.liferay.apio.architect.annotation.Actions.Retrieve;
 import com.liferay.apio.architect.annotation.Id;
 import com.liferay.apio.architect.annotation.ParentId;
+import com.liferay.apio.architect.pagination.PageItems;
+import com.liferay.apio.architect.pagination.Pagination;
 import com.liferay.apio.architect.router.ActionRouter;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Group;
@@ -46,13 +48,18 @@ import java.util.stream.Collectors;
 public class RecipeResource implements ActionRouter<RecipeType> {
 
     @Retrieve
-    public List<RecipeType> retrieveRecipes(@ParentId(OrganizationType.class) long organizationId, User user) throws PortalException {
+    public PageItems<RecipeType> retrieveRecipes(
+        @ParentId(OrganizationType.class) long organizationId, User user, Pagination pagination) throws PortalException {
+
         Group organizationGroup = _groupService.getOrganizationGroup(user.getCompanyId(), organizationId);
 
-        return _recipeService.getRecipesByGroupId(organizationGroup.getGroupId(), -1, -1)
+        List<RecipeType> recipes = _recipeService.getRecipesByGroupId(organizationGroup.getGroupId(), -1, -1)
             .stream()
             .map(recipe -> new RecipeDTO(recipe, _workshopHelper))
             .collect(Collectors.toList());
+
+        return new PageItems<>(
+            recipes.subList(pagination.getStartPosition(), pagination.getEndPosition()), recipes.size());
     }
 
     @Retrieve

@@ -20,6 +20,8 @@ import apio.architect.workshop.type.OrganizationType;
 import com.liferay.apio.architect.annotation.Actions.EntryPoint;
 import com.liferay.apio.architect.annotation.Actions.Retrieve;
 import com.liferay.apio.architect.annotation.Id;
+import com.liferay.apio.architect.pagination.PageItems;
+import com.liferay.apio.architect.pagination.Pagination;
 import com.liferay.apio.architect.router.ActionRouter;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Group;
@@ -53,11 +55,14 @@ public class OrganizationResource implements ActionRouter<OrganizationType> {
 
     @EntryPoint
     @Retrieve
-    public List<OrganizationType> retrieve(User user) throws PortalException {
-        return _organizationService.getUserOrganizations(user.getUserId())
+    public PageItems<OrganizationType> retrieve(User user, Pagination pagination) throws PortalException {
+        List<OrganizationType> organizations = _organizationService.getUserOrganizations(user.getUserId())
             .stream()
             .map(organization -> new OrganizationDTO(organization, _workshopHelper))
             .collect(Collectors.toList());
+
+        return new PageItems<>(
+            organizations.subList(pagination.getStartPosition(), pagination.getEndPosition()), organizations.size());
     }
 
     @Retrieve
