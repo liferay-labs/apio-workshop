@@ -25,7 +25,7 @@ Specifically, once the packages are deployed, the following data will be created
 
 - [Organizations](https://github.com/liferay-labs/apio-workshop/blob/master/liferay-recipes/liferay-recipes-demo/src/main/java/com/liferay/recipes/demo/internal/RecipesDemo.java#L346) that represent different restaurants.
 - [A chef for each organization](https://github.com/liferay-labs/apio-workshop/blob/master/liferay-recipes/liferay-recipes-demo/src/main/java/com/liferay/recipes/demo/internal/RecipesDemo.java#L183): this person will be the one in charge of the restaurant and will be the only one that can create, update or delete recipes in that restaurant's site.
-- [Kitchen asistants](https://github.com/liferay-labs/apio-workshop/blob/master/liferay-recipes/liferay-recipes-demo/src/main/java/com/liferay/recipes/demo/internal/RecipesDemo.java#L207) that will be assigned to restaurants. This assistants will have only permission to see the restaurants they are assigned to, and their recipes.
+- [Kitchen assistants](https://github.com/liferay-labs/apio-workshop/blob/master/liferay-recipes/liferay-recipes-demo/src/main/java/com/liferay/recipes/demo/internal/RecipesDemo.java#L207) that will be assigned to restaurants. This assistants will have only permission to see the restaurants they are assigned to, and their recipes.
 - [Recipes per-restaurant](https://github.com/liferay-labs/apio-workshop/blob/master/liferay-recipes/liferay-recipes-demo/src/main/java/com/liferay/recipes/demo/internal/RecipesDemo.java#L329).
 
 ## Test the API
